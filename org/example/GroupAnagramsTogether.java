@@ -22,6 +22,7 @@ public class GroupAnagramsTogether {
 
     public static void main(String[] args) {
         String[] arr = {"abc","acb","mcf","mfc"};
+
         GroupAnagramsTogether solution = new GroupAnagramsTogether();
         List<List<String>> str = solution.groupAnagrams(arr);
         str.forEach(System.out::println);
