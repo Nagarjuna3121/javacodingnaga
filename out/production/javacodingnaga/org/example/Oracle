@@ -1,0 +1,979 @@
+
+oracle concepts:
+==============
+1)integrity constraints
+2)joins
+3)sub queries
+4)views
+5)indexes
+6)sequence
+8)synonym
+
+
+Database object in oracle:
+=========================
+T=Table
+V=View
+S=Sequence
+I=Index
+S=Synonym
+
+views in oracle:
+===============
+
+->view is a virtual table created on physical table.
+
+1)simple view - view based on single table,doesn't contain group by functions.
+
+2)complex view -  view based on multiple tables contain groups
+
+3)inline view - select statement in from clause of another select statement.its called temperory table.
+
+4)materialized view - stores the data called 'SNAPSHOTS'
+
+joins in oracle:
+===============
+1)Inner Join
+2)left outer join
+3)right outer join
+4)full outer join
+5)equi join
+11)non equi join
+6)cross join
+7)self join
+8)anti join
+9)semi join
+10)natural join
+
+PL/SQL:
+======
+1)cursors
+2)Procedures
+3)Functions
+4)Triggers
+5)Packages
+
+Sub queries:
+
+1)single row sub query
+2)multi row sub query
+3)correlated sub query
+4)non correlated sub query
+
+Diff b/w REPLACE and TRANSLATE function?
+ans)
+
+REPLACE:it searches for a string and replace with given string.
+
+
+syntax:replace(string,search_string,replace_string);
+
+SQL>select replace('computer','om','ab') from dual;
+
+TRANSALTE:used for character by character replacement in a string.
+
+SQL>SELECT TRANSLATE(1256364,2345678,'BDEFGHI') FROM dual;
+
+
+
+-> COALESCE is a function that returns the first non-null value from a list of expressions
+
+
+Diff b/w ROWID AND ROWNUM in oracle?
+
+ans)
+
+=>rowid will be generated while inserting the row,it is permanent id for that row.it is alphanumeric and 18 characters long
+=>rownum is generated based on your query,if u change the query then rownum will changes.it is numberic form.
+
+
+VSIZE FUNCTION: it is used to know number of bytes representation of a particular expression.
+===============
+
+=>select vsize('how r u') from dual;
+     7
+=>select vsize(' ') from dual;
+   1
+
+
+select e.ename,m.ename from emp e,emp m where e.mgr_id=m.mgr_id;
+
+Integer i=Integer.parseInt("652");
+System.out.println("i+:"+i);
+
+top 5 salaries:
+===============
+select * from emp where sal in(select sal from (select unique sal from
+emp order by sal desc)group by rownum,sal having rownum<=5)
+
+=>oracle backup:cold backup,hot backup,export,import,data dump.we can rec
+over our data using recovery manager.
+=>mysql has mysqldump and mysqlhotcopy back up utilities.there is no
+  recovery manager in MYSQL.
+=>MYSQL database does not support any feature like audit vault,ORACLE
+  supports writing progrms on dtabse server for instance audit vault,
+  data guard,data mining.
+=>oracle database supports several programmming languages in databases.
+
+=>MYSQL supports only two character databases char(255 bytes),varchar(65535)
+=>oracle supports char(2000bytes),nchar(2000bytes),varchar2(4000bytes)
+,nvarchar2(4000bytes).
+
+=>MYSQL doesnt have table space,role management,snapshots,synonym and packages
+
+
+=>oracle suppports sequence but MYSQL wont support sequence,incase of MYSQL
+  it will support identity.
+
+kubectl apply
+
+
+identity generators:
+===================
+
+=>assiagned,increment,identity,sequence,hilo,native,foreign,custom generator.
+
+
+Employees who are part of more than one department:
+
+SELECT ed.empno, COUNT(ed.deptno) AS dept_count
+FROM emp ed
+GROUP BY ed.empno
+HAVING COUNT(ed.deptno) >= 1;
+
+
+identitygenerator:to generate bank account no automatically at runtime
+=================
+
+=>using custom generator we can generate account no for customers dynamically
+
+print records based on year,month and count
+===========================================
+
+ select trunc(hiredate,'YY') as recordyear,
+    trunc(hiredate,'MM') as recordmonth,count(*) as recordscount from emp group by  TRUNC(hiredate, 'YY'), TRUNC(hiredate, 'MM') order by recordyear,recordmonth;
+
+Find 2nd highest salary using Offset oracle:
+===========================================
+
+ select sal from emp order by sal desc OFFSET n-1 ROW FETCH NEXT 1 ROW ONLY;
+
+
+TO FIND NTH HIGHEST SALARY:
+=============================
+
+select min(sal) from (select distinct sal from emp order by sal desc) where rownum<=&n;
+
+
+
+To find nth lowest salary:
+==========================
+select max(sal) from (select distinct sal from emp order by sal asc) where rownum<=&n;
+
+
+
+nth highest salary using dense_Rank() method:
+============================================
+
+SELECT * FROM(SELECT sal, ename, DENSE_RANK() OVER(ORDER BY sal DESC) ranking FROM emp )WHERE ranking = 2;
+
+
+nth lowest salary using dense_Rank() method:
+============================================
+SELECT * FROM(SELECT sal, ename, DENSE_RANK() OVER(ORDER BY sal aSC) ranking FROM emp )WHERE ranking = 2;
+
+Employees who doesnt have manager:
+================================
+
+SELECT e.ename FROM emp e LEFT JOIN emp m ON e.mgr = m.empno WHERE m.empno IS NULL;
+
+
+
+Department with zero employees:
+=============================
+
+select deptno,dname from dept where deptno not in(select deptno from emp);
+
+Emploees who earn more than avg sal of department:
+==================================================
+
+SELECT e1.ename,e1.sal FROM emp e1 WHERE e1.sal > (SELECT AVG(e2.sal) FROM emp e2 WHERE e2.deptno = e1.deptno);
+
+
+select average salary of each department
+=========================================
+select d.dname, avg(sal) as averageSal from emp e inner join dept d on e.deptno = d.deptno group by d.dname;
+
+
+TO CONVERT RUPEES TO DOLLERS SALARY:
+===================================
+
+1)select ename,sal,to_char(sal,'C9999.99') from emp;
+
+To Find Second Highest salary:
+========================
+Sql>select max(Sal) from emp where sal not in(select max(Sal) from emp);
+
+To find Fourth highest salary:
+=============================
+
+
+Employees who are also managers:
+===============================
+
+1)SELECT * FROM EMP WHERE empno IN (SELECT distinct mgr FROM EMP);
+
+2)SELECT DISTINCT m.*
+FROM emp e
+JOIN emp m ON e.mgr = m.empno;
+
+Find employees who earn more than their manager:
+================================================
+
+SELECT e1.ename FROM Emp e1 JOIN Emp e2 ON e1.Mgr = e2.empno WHERE e1.sal > e2.sal;
+
+
+maximum sum of elemts which are not adjacents
+
+
+
+DELETE DUPLICATE RECORDS IN ORACLE:
+====================================
+1)using ROWID:
+=============
+
+SQL>delete from emp where rowid not in(select max(rowid) from emp group by empno)
+
+2)using JOINS:
+==============
+
+SQL>delete from emp e1 where rowid not in(select max(rowid) from emp e2 where e1.empno=e2.empno);
+
+3)using row_number()
+
+4)using dense_rank()
+
+5)using group by
+
+8)diff b/w ROWID and ROWNUM?
+ans)
+
+ROWID:rowid is permanent unique id for that row.(hexadecimal) 18
+ROWNUM:rownum is temperory,if u insert new query rownum will refer to another row.(unique)
+
+
+AAASI2AABAAAaFhAAC
+
+Print department wise max salary in sql:
+========================================
+
+ELECT dept_name,
+       emp_name,
+       salary
+FROM (
+  SELECT d.dept_name,
+         e.emp_name,
+         e.salary,
+         RANK() OVER (PARTITION BY e.dept_id ORDER BY e.salary DESC) AS rnk
+  FROM employee e
+  JOIN department d
+    ON e.dept_id = d.dept_id
+)
+WHERE rnk = 1
+ORDER BY dept_name;
+
+
+SubQueries in oracle:
+====================
+1)Nested SubQueries(based on Inner query results Outer Query will be executed)
+
+2)Correalated SubQueries(Outer Query will be executed first and based on that inner queries will be executed)
+
+=>Correalated Subqueries improves performance only when we retrieve few rows through outer Query
+
+INDEX in oracle:
+===============
+1)Normal index
+2)BitMap index
+3)composite index
+4)Partitioned index
+5)Function based index
+6)Domain index
+
+1)select * from emp as of timestamp(sysdate - interval '10' minute);=>to see data present in emp table "10" minutes back
+
+FLASHBACK:  WE CAN RECOVER DATA AND WE CAN RECOVER TABLE
+===========
+=>FLASHBACK INTRODUCED IN ORACLE 10G VERSION
+=>DROP TABLE EMP;
+=>SHOW RECYCLEBIN;
+=>WHEN WE DROP A TABLE IT WILL MOVE TO RECYCLEBIN
+=>TO RESTORE THIS TABLE FROM RECYCLEBIN WE HAVE ONE COMMAND "FLASHBACK"
+  SQL>FLASHBACK TABLE EMP TO BEFORE DROP;
+
+SQL>DROP TABLE EMP PURGE;=>DELETING FROM RECYCLEBIN ALSO.
+
+=>FLASHBACK WILL NOT WORK IF TABLE IS PURGED;
+
+=>SQL>delete from emp;
+ SQL>commit;
+FLASHBACK DATA:
+==============
+SQL>INSERT INTO EMP SELECT * FROM EMP AS OF TIMESTAMP(SYSDATE - INTERVAL '10' MINUTE);
+
+FLASHBACK:
+==========
+=>flashback table
+
+=>flashback table <tablename> to before drop;
+
+=>purge table <tablename>;
+
+=>drop table emp purge;
+
+LOCKING IN ORACLE:
+==================
+=>when ever data is accessing by multiple users at the same time we may encounter some issues
+  a)non repeatable read problem
+  b)dirty read problem
+  c)panthom read problem
+
+=>oracle supports two types of locking
+    1)Exclusive lock
+    2)shared lock
+=>two users cannot update the same data at the same time.
+
+
+=>concurrent access means accessing same data by number of people at the same time
+
+ex:railway ticket booking
+
+oracle supports two types of locking:
+====================================
+
+Exclusive Lock Mode:
+====================
+
+=>it will prevent associate resource from updating the content,only the locked resource can
+          alter the content.
+
+Shared Lock Mode:
+================
+
+=>allows the associated resource to be shared,several transactions can acquire share locks
+   on same reosurce
+
+Row Level lock:
+==============
+
+=>locking entire row
+
+Table level lock:
+===============
+
+=>entire table will be locked
+
+=>SQL>LOCK TABLE <TABLENAME> IN EXCLUSIVE MODE;
+
+=>SQL>LOCK TABLE EMP IN SHARE MODE
+
+EX:LOCK TABLE SCOTT.EMP IN EXCLUSIVE MODE;
+=>table level lock prevents DDL,DML
+
+
+
+INDEX IN ORACLE:
+================
+
+=>index is a two dimensional database object.
+
+=>main purpose of indexes is to speed up the retrieval,manipulate rows
+
+=>index is faster becoz it maintains column data in ascending order,index reduces number of comparisions(verifications)
+
+=>dont try to select data from index,it is invalid.
+
+=>index contains two parts
+
+          addresspart(rowid)    datapart(actual data)
+
+        =>ROWID is invisible column or pseudo column
+
+=>all indexes information will be maintainded under user_indexes table
+
+
+VIEWS IN ORACLE:
+===============
+=>view is nothing but a database object.
+=>if u are selecting same data frequently from database then it is recommended to create view on the data
+   becoz it will reduce database hits.
+=>if u create view on a table first time it will hit the database from second time onwards from second time onwards it will get
+   from view cache(caching)
+
+=>view is nothing but logical table that is created on original table.
+=>view contains logical copy of data from table.
+=>views provide security.
+=>views improve database performance.
+
+
+
+
+TYPES of views:
+===============
+
+1)simple view or updatable view        =>view created on single table data(create view <name> as
+2)composite view or read only view      =>read only view
+3)force view
+4)materialized view
+5)inline view
+
+
+
+=>SQL>conn system/manager;
+=>SQL>grant create view to scott;
+
+=>SQL>conn scott/tiger;
+
+grant succeeded
+
+
+
+
+=>create view vw_salesman as select * from where job='salesman' order by sal;
+
+=>view maintains logical copy of salesman data
+
+
+=>only materialized view contains physical data.
+
+UPDATING VIEW:we can update only simple view
+=============
+
+=>update view vw_salesman set sal=3200 where ename='denver';
+
+=>delete from vw_salesman where ename='honey';
+
+SEQUENCE:
+========
+1)sequence is independent object
+
+2)to generate serial numbers automatically while generating tables.
+
+3)we will use sequence to genarate primary key values.
+
+SYNONYM:
+========
+we have two types of synonym
+a)public synonym(only DBA can create)
+b)private synonym(only owner of the object can create)
+
+1)to create synonym we need dba permission.
+
+2)if u are frequently using a table name in a query instead of using lengthy name in query use synonym.(permanent shortcut for table name)
+
+SQL>grant create synonym to scott;
+
+sql>create synonym ctd for cust_trans_dtls;
+
+sql>insert into ctd values(trnsid.nextval,'payment',sysdate,12000,srno.nextval);
+
+sql>commit;
+
+
+
+==>subqueries are faster than joins
+
+=>joins are slower becoz joins need to compare each record in first table with each record in other table in second table,so no of comparisions more
+
+
+
+1)Differenece between drop and truncate?
+Truncate -> will delete all rows and retains structure(means indexes,privilleges,constraints)
+Drop -> If a table is dropped, all things associated with the tables are dropped as well. This includes - the relationships defined on the table with other tables,
+the integrity checks and constraints, access privileges and other grants that the table has
+
+Aggregate Functions:
+===================
+1)aggregate functions in sql
+    SUM()
+    AVG()
+    MIN()
+    MAX()
+    COUNT()
+    FIRST()
+    LAST()
+
+2)convert month number to month name in oracle?
+
+ans)SELECT TO_CHAR(TO_DATE(7, 'MM'), 'MONTH') AS monthname FROM DUAL;
+
+3)convert year number to year name?
+
+ans)SELECT TO_CHAR(TO_DATE(2017, 'YYYY'), 'YEAR') AS yearname FROM DUAL;
+
+ 4)diff b/w delte,truncate,drop tables?
+
+
+
+     DELETE                    TRUNCATE              DROP
+
+1)deletes only one row or   1)deletes all rows from   1)removes table from database
+  all rows.                  table
+
+2)we need to do commit,or   2)we cannot rollback in   2)u cannot rollback drop operation
+  rollback to make changes       truncate operation
+  permanent
+
+3)it is a DML Operation      3)it is a DDL operation   3)it is a DDL operation
+
+
+4)delete is slower           4)truncate is faster      4)it is faster
+                                than delete
+
+5)u can use conditions       5)u cant use conditions
+like where clause              here
+
+
+
+5)where clause is used to put conditions on columns,having clause is used to put conditions on groups,aggragate functions
+
+HAVING CLAUSE:
+=============
+
+=>having clause is used to put conditions on groups,to decide which group will be part of final result.
+
+=>SQL>select name,sum(sal) from emp group by name having sum(sal)>3000;
+
+GROUP CLAUSE:
+============
+
+=>
+
+
+Diff b/w view and materialized view?
+======================================
+
+1)view maintains logical copy of table data
+2)materialized view contains data and contains resultset of a query.
+
+
+
+
+
+Triggers in oracle:
+==================
+
+=>it is a database object that will be invoked automatically when ever any event occurs.
+
+=>
+
+
+Queries:
+========
+
+1)Employees who earn more than their managers?
+
+select e1.ename AS employee from emp e1 INNER JOIN emp e2 ON e1.mgr = e2.empno where e1.sal > e2.sal;
+
+`1)find number of employees in each depatment along with depatment id?
+
+sql> select dept_id,count(*) from emp_details group by dept_id
+
+
+1)count employees in each department?
+select dept.DNAME ,count(*) as count from emp inner join dept on emp.DEPTNO = dept.DEPTNO group by dept.DNAME;
+
+Joins:
+=======
+
+1)Select departments with more than 5 employees?
+select deptno,count(*) as empcount from emp group by deptno having count(*) >=5 order by deptno asc;
+
+1)Display employeed and their managers?
+
+SELECT E.ename AS "Employee Name",
+       M.ename AS "Manager"
+FROM emp E
+JOIN emp M ON E.mgr = M.mgr;
+
+2)
+
+Managers with atleast 5 direct reports.?
+
+1)using subqueries
+
+select e1.ename from emp e1 where e1.empno IN(select e2.mgr from emp e2 GROUP BY e2.mgr HAVING COUNT(e2.empno)>=5);
+
+Normalization forms:
+====================
+
+1)First Normal Form(1NF) -> A table is referred to as being in its First Normal Form if the atomicity of the table is 1
+
+2)Second Normal Form(2NF) -> Second Normal Form, you need to split the table into two parts. This will give you the tables below.
+
+3)Third Normal Form(3NF) ->
+
+4)Boyce Codd Normal Form(BCNF) ->
+
+
+query optimization:
+==================
+
+1) using appropiate indexes.
+2)avoid unnecessary joins and subqueries
+3)
+
+Indexs:
+=======
+
+1)index uses B-Tree data structure.when we create index the data is sorted.
+2)index speed up the search queries.
+3)When a query is executed on an indexed column, the database uses a fast search method (like a binary search)
+ to navigate the B-tree and find the relevant entries, drastically reducing the number of disk I/O operations compared to a full table scan
+
+
+1)B-Tree index
+2)Compressed B-Tree
+3)Bitmap index
+4)Function Bases index
+5)Reverse key indexes
+6)Index organized table
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
