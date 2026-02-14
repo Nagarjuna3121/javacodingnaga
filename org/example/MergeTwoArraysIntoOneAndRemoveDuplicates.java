@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class MergeTwoArraysIntoOneAndRemoveDuplicates {
     public static void main(String[] args) {
-        int[] first = {10, 20, 30};
+        int[] first = {42, 20, 30};
         int[] second = {20, 30, 40, 50};
         //  o/p : [10, 20, 30, 40, 50]
         Set<Integer> orderedUnique = new LinkedHashSet<>();

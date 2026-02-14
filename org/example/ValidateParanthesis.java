@@ -28,7 +28,7 @@ public class ValidateParanthesis {
     }
 
     public static void main(String[] args) {
-        String s = "([{}])";
+        String s = "{()";
         ValidateParanthesis matching =  new ValidateParanthesis();
         boolean isMatch = matching.isValid(s);
         System.out.println(isMatch);

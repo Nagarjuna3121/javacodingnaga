@@ -12,10 +12,12 @@ public class GroupAnagramsTogether {
             char[] charArray = s.toCharArray();
             Arrays.sort(charArray);
             String key = String.valueOf(charArray);
-            if (!map.containsKey(key)) {
-                map.put(key, new ArrayList<>());
-            }
-            map.get(key).add(s);
+
+            map.computeIfAbsent(key,k -> new ArrayList<>()).add(s);
+//            if (!map.containsKey(key)) {
+//                map.put(key, new ArrayList<>());
+//            }
+//            map.get(key).add(s);
         }
         return new ArrayList<>(map.values());
     }

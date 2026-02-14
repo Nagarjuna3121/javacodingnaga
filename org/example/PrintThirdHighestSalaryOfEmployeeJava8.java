@@ -22,6 +22,10 @@ public class PrintThirdHighestSalaryOfEmployeeJava8 {
         System.out.println(thirdHighestSalaryEmployee.get());
         thirdHighestSalaryEmployee.ifPresent(employee ->
                 System.out.println("Third highest salary: " + employee.getSalary()));
+
+
+    //    Optional<Employee3> thirdHighestSalaryEmployee1 =
+
     }
 }
 

@@ -1,0 +1,3 @@
+void main() {
+    System.out.println("Hello from Java 25 Compact Source!");
+}

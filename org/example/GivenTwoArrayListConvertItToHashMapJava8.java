@@ -12,6 +12,8 @@ public class GivenTwoArrayListConvertItToHashMapJava8 {
         List<String> keyList = List.of("a", "b", "c", "d");
         List<Integer> valueList = List.of(1, 2, 3, 4);
 
+        int myname = 12;
+
         Map<String,Integer> map = IntStream.range(0,keyList.size()).boxed().collect(Collectors.toMap(keyList::get,valueList::get));
         System.out.println(map);
 

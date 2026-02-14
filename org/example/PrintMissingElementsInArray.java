@@ -8,24 +8,24 @@ public class PrintMissingElementsInArray {
     public static void printMissingElements(int arr[], int N)
     {
         int cnt = 0;
-        for (int i = arr[0]; i <= arr[N - 1]; i++)
-        {
-
-            // Check if number is equal to the first element in
-            // given array if array element match skip it increment for next element
-            if (arr[cnt] == i)
-            {
-
-                // Increment the count to check next element
-                cnt++;
-            }
-            else
-            {
-
-                // Print missing number
-                System.out.print(i + " ");
-            }
-        }
+//        for (int i = arr[0]; i <= arr[N - 1]; i++)
+//        {
+//
+//            // Check if number is equal to the first element in
+//            // given array if array element match skip it increment for next element
+//            if (arr[cnt] == i)
+//            {
+//
+//                // Increment the count to check next element
+//                cnt++;
+//            }
+//            else
+//            {
+//
+//                // Print missing number
+//                System.out.print(i + " ");
+//            }
+//        }
     }
 
     // Driver Code
